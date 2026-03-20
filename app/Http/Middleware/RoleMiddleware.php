@@ -19,7 +19,7 @@ class RoleMiddleware
         if (Auth::check() && Auth::user()->role == $role) {
             return $next($request);
         }
-       
+
         abort(403);
     }
 }
