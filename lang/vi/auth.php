@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'failed' => 'Thông tin đăng nhập không chính xác.',
@@ -10,6 +10,8 @@ return [
         'email' => 'Email',
         'password' => 'Mật khẩu',
         'password_confirmation' => 'Xác nhận mật khẩu',
+        'new_password' => 'Mật khẩu mới',
+        'new_password_confirmation' => 'Xác nhận mật khẩu mới',
         'remember_me' => 'Ghi nhớ đăng nhập',
     ],
 
@@ -36,7 +38,6 @@ return [
         'forgot_password' => 'Đừng lo, chúng tôi sẽ hỗ trợ bạn.',
         'confirm_password' => 'Đây là khu vực bảo mật của hệ thống. Vui lòng xác nhận mật khẩu trước khi tiếp tục.',
         'forgot_password_help' => 'Nhập email tài khoản của bạn, chúng tôi sẽ gửi liên kết để bạn đặt lại mật khẩu mới.',
-        'forgot_password_log_mailer' => 'Môi trường hiện tại đang dùng MAIL_MAILER=log, nên email sẽ không được gửi ra hộp thư thật. Sau khi bấm gửi, hãy mở file storage/logs/laravel.log để lấy liên kết đặt lại mật khẩu.',
         'verify_email_help' => 'Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, vui lòng xác minh địa chỉ email bằng cách nhấp vào liên kết chúng tôi vừa gửi cho bạn. Nếu bạn chưa nhận được email, chúng tôi sẽ gửi lại cho bạn.',
         'verification_link_sent' => 'Một liên kết xác minh mới đã được gửi đến địa chỉ email bạn đã cung cấp khi đăng ký.',
     ],

@@ -17,7 +17,7 @@ class FavoriteController extends Controller
         $favorite_recipe = Favorite::join('recipes as r', 'r.id', '=', 'favorites.recipe_id')
                             ->where('favorites.user_id', $user)
                             ->get();
-        
+
         return view('favorite.index', ['favorite_recipe' => $favorite_recipe]);
     }
 
@@ -39,21 +39,20 @@ class FavoriteController extends Controller
         $favorite = Favorite::where('user_id', $user)
                             ->where('recipe_id', $request->recipe_id)
                             ->first();
-        
-        if($favorite){
+
+        if ($favorite) {
             $favorite->delete();
 
-            session()->flash('success', 'Recipe removed from favorites!');
+            session()->flash('success', 'Đã xóa công thức khỏi danh sách yêu thích!');
 
-            return response()->json(['message' => 'Recipe removed from favorites!', 'favorited' => false]);
+            return response()->json(['message' => 'Đã xóa công thức khỏi danh sách yêu thích!', 'favorited' => false]);
         }
-        else{
-            Favorite::create(['user_id' => $user, 'recipe_id' => $request->recipe_id]);
 
-            session()->flash('success', 'Recipe added to favorites!');
+        Favorite::create(['user_id' => $user, 'recipe_id' => $request->recipe_id]);
 
-            return response()->json(['message' => 'Recipe added to favorites!', 'favorited' => true]);
-        }
+        session()->flash('success', 'Đã thêm công thức vào danh sách yêu thích!');
+
+        return response()->json(['message' => 'Đã thêm công thức vào danh sách yêu thích!', 'favorited' => true]);
     }
 
     /**

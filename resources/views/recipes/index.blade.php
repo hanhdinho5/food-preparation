@@ -3,11 +3,11 @@
         <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
 
             <li class="text-sm capitalize leading-normal text-dark after:ml-2 after:content-['/']" aria-current="page">
-                My Recipes
+                Công thức của tôi
             </li>
         </ol>
 
-        <h6 class="mb-0 font-bold text-dark capitalize">My Recipes</h6>
+        <h6 class="mb-0 font-bold text-dark capitalize">Công thức của tôi</h6>
     </x-slot>
 
     <div class="py-12">
@@ -21,7 +21,7 @@
                             <div class="flex-none w-2/3 max-w-full px-3">
                                 <div>
                                     <p class="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Total Recipes
+                                        Tổng công thức
                                     </p>
                                     <h5 class="mb-2 font-bold">{{ count($recipe) }}</h5>
                                     
@@ -45,7 +45,7 @@
                             <div class="flex-none w-2/3 max-w-full px-3">
                                 <div>
                                     <p class="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Breakfast
+                                        Bữa sáng
                                     </p>
                                     <h5 class="mb-2 font-bold dark:text-white">{{ $totalBreakfast }}</h5>
                                    
@@ -70,7 +70,7 @@
                             <div class="flex-none w-2/3 max-w-full px-3">
                                 <div>
                                     <p class="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Lunch
+                                        Bữa trưa
                                     </p>
                                     <h5 class="mb-2 font-bold dark:text-white">{{ $totalLunch }}</h5>
                                     
@@ -96,7 +96,7 @@
                             <div class="flex-none w-2/3 max-w-full px-3">
                                 <div>
                                     <p class="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Dinner
+                                        Bữa tối
                                     </p>
                                     <h5 class="mb-2 font-bold">{{ $totalDinner }}</h5>
                                    
@@ -122,14 +122,14 @@
                     <div class="flex flex-wrap p-4 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
 
                         <div class="flex items-center flex-none w-1/2 max-w-full px-3">
-                            <h4 class="font-bold text-lg">List of Recipes</h4>
+                            <h4 class="font-bold text-lg">Danh sách công thức</h4>
                         </div>
 
                         <div class="flex-none w-1/2 max-w-full px-3 text-right">
                             <a href="{{ route('recipe.create') }}"
                                 class="inline-block px-8 py-2 mb-0 text-sm font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-none cursor-pointer bg-150 active:opacity-85 hover:-translate-y-px tracking-tight-rem bg-x-25 hover:opacity-75">
                                 <i class="fa fa-plus text-2.8 mr-2"></i>
-                                Create New Recipe
+                                Tạo công thức mới
                             </a>
                         </div>
                     </div>
@@ -140,15 +140,15 @@
                                     <tr>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Title
+                                            Tiêu đề
                                         </th>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Category
+                                            Danh mục
                                         </th>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Created At
+                                            Ngày tạo
                                         </th>
                                         <th
                                             class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -159,7 +159,7 @@
                                     @if($recipe->isEmpty())
                                         <tr>
                                             <td colspan="4" class="text-center p-4">
-                                                <span class="text-gray-500 text-xs">No recipes found.</span>
+                                                <span class="text-gray-500 text-xs">Không tìm thấy công thức nào.</span>
                                             </td>
                                         </tr>
                                     @else
@@ -217,16 +217,16 @@
                                                     class="p-2 align-middle text-center bg-transparent whitespace-nowrap shadow-transparent">
                                                     <a href="{{ route('recipe.show', $data->id) }}"
                                                         class="text-xs font-bold leading-tight text-slate-400 mr-4">
-                                                        View
+                                                        Xem
                                                     </a>
 
                                                     <a href="{{ route('recipe.edit', $data->id) }}"
                                                         class="text-xs font-bold leading-tight text-blue-400 mr-4">
-                                                        Edit
+                                                        Sửa
                                                     </a>
 
                                                     <div x-data="{modalIsOpen: false}" class="inline">
-                                                        <a x-on:click="modalIsOpen = true" class="cursor-pointer text-xs font-bold leading-tight text-red-400">Delete using Alpine</a>
+                                                        <a x-on:click="modalIsOpen = true" class="cursor-pointer text-xs font-bold leading-tight text-red-400">Xóa bằng Alpine</a>
                                                         
                                                         <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false" class="fixed inset-0 z-30 flex items-end justify-center p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8" role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
                                                             <!-- Modal Dialog -->
@@ -242,15 +242,15 @@
                                                                 </div>
                                                                 <!-- Dialog Body -->
                                                                 <div class="p-4"> 
-                                                                    <h3 class="mb-8 text-lg font-semibold text-gray-500">Are you sure you want to delete this recipe?</h3>
+                                                                    <h3 class="mb-8 text-lg font-semibold text-gray-500">Bạn có chắc chắn muốn xóa công thức này không?</h3>
                                                                    
                                                                     <form action="{{ route('recipe.destroy', $data->id) }}" method="POST">
                                                                         @csrf
                                                                         @method('DELETE')
         
                                                                         <div class="flex flex-col w-full gap-2">
-                                                                            <x-danger-button class="w-full justify-center">Delete {{ $data->title }}</x-danger-button> 
-                                                                            <x-secondary-button type="button" class="w-full justify-center" x-on:click="modalIsOpen = false">Cancel</x-secondary-button>
+                                                                            <x-danger-button class="w-full justify-center">Xóa {{ $data->title }}</x-danger-button> 
+                                                                            <x-secondary-button type="button" class="w-full justify-center" x-on:click="modalIsOpen = false">Hủy</x-secondary-button>
                                                                                
                                                                         </div>
                                                                     </form>
@@ -261,7 +261,7 @@
                                                     </div>
 
                                                     {{-- alternative pure js--}}
-                                                    <button onclick="openModal({{ $data->id }})" class="cursor-pointer text-xs font-bold leading-tight text-red-400 ml-2">Delete Using Js</button>
+                                                    <button onclick="openModal({{ $data->id }})" class="cursor-pointer text-xs font-bold leading-tight text-red-400 ml-2">Xóa bằng JS</button>
     
                                                     <div id="deleteModal-{{ $data->id }}" class="fixed inset-0 z-30 hidden flex items-center justify-center p-4 backdrop-blur-md" role="dialog" aria-modal="true">
                                                         <div class="flex max-w-lg flex-col gap-4 overflow-hidden border bg-white shadow-xl rounded-2xl">
@@ -275,15 +275,15 @@
                                                             </div>
                                                             <!-- Dialog Body -->
                                                             <div class="p-4">
-                                                                <h3 class="mb-8 text-lg font-semibold text-gray-500">Are you sure you want to delete this recipe?</h3>
+                                                                <h3 class="mb-8 text-lg font-semibold text-gray-500">Bạn có chắc chắn muốn xóa công thức này không?</h3>
                                                                 
                                                                 <form action="{{ route('recipe.destroy', $data->id) }}" method="POST">
                                                                     @csrf
                                                                     @method('DELETE')
     
                                                                     <div class="flex flex-col w-full gap-2">
-                                                                        <button type="submit" class="bg-red-500 inline-block w-full px-8 py-2 text-sm font-bold leading-normal text-center text-white capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px">Delete {{ $data->title }}</button>
-                                                                        <button type="button" class="inline-block w-full px-4 py-2 bg-white border border-gray-300 font-bold text-sm text-gray-700 capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px" onclick="closeModal({{ $data->id }})">Cancel</button>
+                                                                        <button type="submit" class="bg-red-500 inline-block w-full px-8 py-2 text-sm font-bold leading-normal text-center text-white capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px">Xóa {{ $data->title }}</button>
+                                                                        <button type="button" class="inline-block w-full px-4 py-2 bg-white border border-gray-300 font-bold text-sm text-gray-700 capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px" onclick="closeModal({{ $data->id }})">Hủy</button>
                                                                     
                                                                     </div>
                                                                 </form>

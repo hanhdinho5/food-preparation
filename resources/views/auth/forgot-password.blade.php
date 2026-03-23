@@ -1,23 +1,15 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <x-form-title :title="__('auth.titles.forgot_password')" :description="__('auth.descriptions.forgot_password')"></x-form-title>
 
     <div class="mb-4 text-sm text-gray-600">
         {{ __('auth.descriptions.forgot_password_help') }}
     </div>
 
-    @if (config('mail.default') === 'log')
-        <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            {{ __('auth.descriptions.forgot_password_log_mailer') }}
-        </div>
-    @endif
-
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
-        <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('auth.labels.email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />

@@ -3,11 +3,11 @@
         <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
 
             <li class="text-sm capitalize leading-normal text-dark after:ml-2 after:content-['/']" aria-current="page">
-                My Favorites
+                Công thức yêu thích
             </li>
         </ol>
 
-        <h6 class="mb-0 font-bold text-dark capitalize">My Favorites</h6>
+        <h6 class="mb-0 font-bold text-dark capitalize">Công thức yêu thích</h6>
     </x-slot>
 
     <div class="py-12">
@@ -16,7 +16,7 @@
             <div class="flex-none w-full">
                 <div class="relative flex flex-col min-w-0 p-4 mx-10 break-words bg-white border-0 border-transparent border-solid shadow-xl rounded-2xl bg-clip-border">
                     <div class="p-4 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                        <h4 class="font-bold text-lg">Favorite Recipes</h4>
+                        <h4 class="font-bold text-lg">Công thức yêu thích</h4>
                     </div>
                     <div class="flex-auto px-0 pt-0 pb-2">
                         <div class="p-0 overflow-x-auto">
@@ -25,15 +25,15 @@
                                     <tr>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Title
+                                            Tiêu đề
                                         </th>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Category
+                                            Danh mục
                                         </th>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Author
+                                            Tác giả
                                         </th>
                                         <th
                                             class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -44,7 +44,7 @@
                                     @if($favorite_recipe->isEmpty())
                                         <tr>
                                             <td colspan="4" class="text-center p-4">
-                                                <span class="text-gray-500 text-xs">No favorite recipes found.</span>
+                                                <span class="text-gray-500 text-xs">Không có công thức yêu thích nào.</span>
                                             </td>
                                         </tr>
                                     @else
@@ -99,12 +99,12 @@
                                                     class="p-2 align-middle text-center bg-transparent whitespace-nowrap shadow-transparent">
                                                     <a href="{{ route('recipe.show', $recipe->id) }}"
                                                         class="text-xs font-semibold leading-tight text-slate-400 mr-4">
-                                                        View
+                                                        Xem
                                                     </a>
 
                                                     <a href="#" data-recipe-id="{{ $recipe->id }}"
                                                         class="favorite-btn text-xs font-semibold leading-tight text-red-400">
-                                                        Remove
+                                                        Bỏ thích
                                                     </a>
                                                 </td>
                                             </tr>

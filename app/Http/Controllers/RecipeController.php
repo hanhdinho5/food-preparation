@@ -4,253 +4,265 @@ namespace App\Http\Controllers;
 
 use App\Events\CommentMessage;
 use App\Models\Comment;
+use App\Models\DishType;
+use App\Models\Ingredient;
 use App\Models\Rating;
 use App\Models\Recipe;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class RecipeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $user = Auth::user()->id;
-        $recipe = Recipe::where('user_id', $user)->get();
+        $user = Auth::id();
 
-        $totalBreakfast = Recipe::where('user_id', $user)
-                            ->where('category', 'breakfast')
-                            ->count();
+        $recipe = Recipe::with(['region', 'dishType'])
+            ->where('user_id', $user)
+            ->latest()
+            ->get();
 
-        $totalLunch = Recipe::where('user_id', $user)
-                            ->where('category', 'lunch')
-                            ->count();
+        $totalBreakfast = Recipe::where('user_id', $user)->where('category', 'Bữa sáng')->count();
+        $totalLunch = Recipe::where('user_id', $user)->where('category', 'Bữa trưa')->count();
+        $totalDinner = Recipe::where('user_id', $user)->where('category', 'Bữa tối')->count();
 
-        $totalDinner = Recipe::where('user_id', $user)
-                            ->where('category', 'dinner')
-                            ->count();
-
-        return view('recipes.index', [
-                                        'recipe' => $recipe,
-                                        'totalBreakfast' => $totalBreakfast,
-                                        'totalLunch' => $totalLunch,
-                                        'totalDinner' => $totalDinner,
-                                    ]);
+        return view('recipes.index', compact('recipe', 'totalBreakfast', 'totalLunch', 'totalDinner'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('recipes.create');
+        return view('recipes.create', [
+            'regions' => Region::orderBy('name')->get(),
+            'dishTypes' => DishType::orderBy('name')->get(),
+            'ingredientsCatalog' => Ingredient::orderBy('name')->get(),
+            'categoryOptions' => $this->categoryOptions(),
+            'difficultyOptions' => $this->difficultyOptions(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'ingredients' => 'required|string',
-            'instructions' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        $validated = $request->validate($this->recipeRules(true));
 
-        if ($request->hasFile('image')) { 
-            // Get the original file extension
-            $extension = $request->file('image')->getClientOriginalExtension();
-        
-            // Create a unique filename using the recipe title and current timestamp
-            $filename = Str::slug($request->title) . '-' . time() . '.' . $extension;
+        $imagePath = $request->file('image')->storeAs(
+            'images',
+            Str::slug($validated['title']) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension(),
+            'public'
+        );
 
-            // Store the image in the 'public/images' directory
-            $imagePath = $request->file('image')->storeAs('images', $filename, 'public');
-        }
-
-        Recipe::create([
-            'title' => $request->title,
-            'ingredients' => $request->ingredients,
-            'instructions' => $request->instructions,
+        $recipe = Recipe::create([
+            'title' => $validated['title'],
+            'summary' => $validated['summary'] ?? null,
+            'ingredients' => $validated['ingredients'],
+            'instructions' => $validated['instructions'],
+            'cooking_time' => $validated['cooking_time'],
+            'prep_time' => $validated['prep_time'] ?? null,
+            'servings' => $validated['servings'] ?? null,
+            'difficulty' => $validated['difficulty'] ?? null,
+            'category' => $validated['category'],
             'image_path' => $imagePath,
-            'cooking_time' => $request->cooking_time,
-            'category' => $request->category,
-            'user_id' => Auth::user()->id,
+            'video_url' => $validated['video_url'] ?? null,
+            'status' => 'published',
+            'user_id' => Auth::id(),
+            'region_id' => $validated['region_id'] ?? null,
+            'dish_type_id' => $validated['dish_type_id'] ?? null,
         ]);
 
-        return redirect()->route('recipe.index')->with('success', 'Recipe saved successfully!');
+        $recipe->ingredientsList()->sync($validated['ingredient_ids'] ?? []);
+
+        return redirect()->route('recipe.index')->with('success', 'Công thức đã được lưu thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $recipe = Recipe::find($id);
-        $user = Auth::user()->id;
+        $recipe = Recipe::with(['user', 'region', 'dishType', 'ingredientsList'])->findOrFail($id);
+        $user = Auth::id();
 
-        // Check if the recipe is favorited by the user
-        if($user)
-            $isFavorited = $recipe->favorites()->where('user_id', $user)->exists();
-        else
-            $isFavorited = false;
+        $isFavorited = $recipe->favorites()->where('user_id', $user)->exists();
+        $ratingValue = Rating::where('recipe_id', $id)->avg('score');
+        $ratingCount = Rating::where('recipe_id', $id)->count();
+        $myRatingValue = Rating::where('recipe_id', $id)->where('from_user', $user)->avg('score');
+        $comment = $recipe->comments()
+            ->with('user')
+            ->latest()
+            ->limit(10)
+            ->get();
 
-        // check rating calculation
-        $ratingValue = Rating::where('recipe_id', $id)
-                            ->avg('score');
-
-        $myRatingValue = Rating::where('recipe_id', $id)
-                                ->where('from_user', $user)
-                                ->avg('score');
-
-          // check comment total
-        $comment = Comment::where('recipe_id', $id)->get();
-
-        return view('recipes.view', [
-                                        'recipe'=>$recipe, 
-                                        'isFavorited' => $isFavorited,
-                                        'ratingValue' => $ratingValue,
-                                        'myRatingValue' => $myRatingValue,
-                                        'comment' => $comment
-                                    ]);
+        return view('recipes.view', compact('recipe', 'isFavorited', 'ratingValue', 'ratingCount', 'myRatingValue', 'comment'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $recipe = Recipe::findOrFail($id);
+        $recipe = Recipe::with('ingredientsList')->findOrFail($id);
+        $this->authorizeRecipeOwner($recipe);
 
-        return view('recipes.edit', ['recipe' => $recipe]);
+        return view('recipes.edit', [
+            'recipe' => $recipe,
+            'regions' => Region::orderBy('name')->get(),
+            'dishTypes' => DishType::orderBy('name')->get(),
+            'ingredientsCatalog' => Ingredient::orderBy('name')->get(),
+            'selectedIngredients' => $recipe->ingredientsList->pluck('id')->all(),
+            'categoryOptions' => $this->categoryOptions(),
+            'difficultyOptions' => $this->difficultyOptions(),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'ingredients' => 'required|string',
-            'instructions' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        $recipe = Recipe::findOrFail($id);
+        $this->authorizeRecipeOwner($recipe);
+
+        $validated = $request->validate($this->recipeRules(false));
 
         $data = [
-            'title' => $request->title,
-            'ingredients' => $request->ingredients,
-            'instructions' => $request->instructions,
-            'cooking_time' => $request->cooking_time,
-            'category' => $request->category,
+            'title' => $validated['title'],
+            'summary' => $validated['summary'] ?? null,
+            'ingredients' => $validated['ingredients'],
+            'instructions' => $validated['instructions'],
+            'cooking_time' => $validated['cooking_time'],
+            'prep_time' => $validated['prep_time'] ?? null,
+            'servings' => $validated['servings'] ?? null,
+            'difficulty' => $validated['difficulty'] ?? null,
+            'category' => $validated['category'],
+            'video_url' => $validated['video_url'] ?? null,
+            'region_id' => $validated['region_id'] ?? null,
+            'dish_type_id' => $validated['dish_type_id'] ?? null,
         ];
 
-        $recipe = Recipe::findOrFail($id);
-        
-        if ($request->hasFile('image')) { 
-             // Delete the old image if it exists
+        if ($request->hasFile('image')) {
             if ($recipe->image_path) {
-                Storage::delete($recipe->image_path);
+                Storage::disk('public')->delete($recipe->image_path);
             }
-            // Get the original file extension
-            $extension = $request->file('image')->getClientOriginalExtension();
-        
-            // Create a unique filename using the recipe title and current timestamp
-            $filename = Str::slug($request->title) . '-' . time() . '.' . $extension;
 
-            // Store the image in the 'public/images' directory
-            $imagePath = $request->file('image')->storeAs('images', $filename, 'public');
-
-            $data['image_path'] = $imagePath;
+            $data['image_path'] = $request->file('image')->storeAs(
+                'images',
+                Str::slug($validated['title']) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension(),
+                'public'
+            );
         }
 
         $recipe->update($data);
+        $recipe->ingredientsList()->sync($validated['ingredient_ids'] ?? []);
 
-        return redirect()->route('recipe.index')->with('success', 'Recipe updated successfully.');
+        return redirect()->route('recipe.index')->with('success', 'Công thức đã được cập nhật thành công.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $recipe = Recipe::findOrFail($id);
+        $this->authorizeRecipeOwner($recipe);
 
-        // Delete the image from storage if it exists
         if ($recipe->image_path) {
-            Storage::delete($recipe->image_path);
+            Storage::disk('public')->delete($recipe->image_path);
         }
 
-        // Delete the recipe from the database
+        $recipe->ingredientsList()->detach();
         $recipe->delete();
 
-        return redirect()->route('recipe.index')->with('success', 'Recipe deleted successfully.');
+        return redirect()->route('recipe.index')->with('success', 'Công thức đã được xóa thành công.');
     }
 
     public function saveRating(Request $request)
     {
-        $user = Auth::user()->id;
+        $user = Auth::id();
 
         $rating = Rating::where('from_user', $user)
-                            ->where('recipe_id', $request->recipe_id)
-                            ->first();
-        
-        if($rating){
+            ->where('recipe_id', $request->recipe_id)
+            ->first();
+
+        if ($rating) {
             $rating->delete();
         }
-        
+
         Rating::create([
             'from_user' => $user,
             'recipe_id' => $request->recipe_id,
-            'score' => $request->rating
+            'score' => $request->rating,
         ]);
 
-        session()->flash('success', 'Rating added!');
+        session()->flash('success', 'Đã thêm đánh giá!');
 
-        return response()->json(['success' => 'Rating added!']);
+        return response()->json(['success' => 'Đã thêm đánh giá!']);
     }
 
-    public function sendComment(Request $request){
-        // $request->validate([
-        //     'content' => 'required|string',
-        // ]);
-
+    public function sendComment(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-            // Flash the error message
-            session()->flash('error', 'Comment content cannot be empty!');
+            $message = $validator->errors()->first('content');
+            session()->flash('error', $message);
 
-             // Return a JSON response with the error message
-            return response()->json(['error' => 'Comment content cannot be empty!']);
+            return response()->json(['error' => $message], 422);
         }
 
-        $data = [
+        Comment::create([
             'recipe_id' => $request->recipeId,
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'content' => $request->content,
-        ];
+        ]);
 
-        Comment::create($data);
-
-        session()->flash('success', 'Comment added!');
+        session()->flash('success', 'Đã thêm bình luận!');
 
         $recipe = Recipe::find($request->recipeId);
-
-        $message = Auth::user()->name . ' has commented on ' . $recipe->title;
+        $message = Auth::user()->name . ' đã bình luận về công thức ' . $recipe->title;
 
         event(new CommentMessage($message, $recipe->user_id));
 
-        return response()->json(['success' => 'Comment added!']);
+        return response()->json(['success' => 'Đã thêm bình luận!']);
+    }
+
+    protected function authorizeRecipeOwner(Recipe $recipe): void
+    {
+        abort_unless($recipe->user_id === Auth::id(), 403);
+    }
+
+    protected function recipeRules(bool $isCreate): array
+    {
+        $imageRule = $isCreate ? 'required|image|mimes:jpeg,png,jpg|max:2048' : 'nullable|image|mimes:jpeg,png,jpg|max:2048';
+
+        return [
+            'title' => 'required|string|max:255',
+            'summary' => 'nullable|string|max:500',
+            'ingredients' => 'required|string',
+            'instructions' => 'required|string',
+            'image' => $imageRule,
+            'cooking_time' => 'required|integer|min:1',
+            'prep_time' => 'nullable|integer|min:0',
+            'servings' => 'nullable|integer|min:1',
+            'difficulty' => 'nullable|in:Dễ,Trung bình,Khó',
+            'category' => 'required|string|max:255',
+            'video_url' => 'nullable|url|max:255',
+            'region_id' => 'nullable|exists:regions,id',
+            'dish_type_id' => 'nullable|exists:dish_types,id',
+            'ingredient_ids' => 'nullable|array',
+            'ingredient_ids.*' => 'exists:ingredients,id',
+        ];
+    }
+
+    protected function categoryOptions(): array
+    {
+        return [
+            'Bữa sáng' => 'Bữa sáng',
+            'Bữa trưa' => 'Bữa trưa',
+            'Bữa tối' => 'Bữa tối',
+            'Ăn vặt' => 'Ăn vặt',
+            'Món chính' => 'Món chính',
+        ];
+    }
+
+    protected function difficultyOptions(): array
+    {
+        return [
+            'Dễ' => 'Dễ',
+            'Trung bình' => 'Trung bình',
+            'Khó' => 'Khó',
+        ];
     }
 }

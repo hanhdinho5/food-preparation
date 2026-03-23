@@ -1,49 +1,83 @@
 <?php
 
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
+use App\Models\DishType;
+use App\Models\Ingredient;
 use App\Models\Recipe;
+use App\Models\Region;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
-    $topRecipes = Recipe::with('ratings') // Eager load the ratings relationship
-        ->select('recipes.*') // Select all fields from the recipes table
-        ->withAvg('ratings', 'score') // Calculate the average rating
-        ->orderBy('ratings_avg_score', 'DESC') // Order by the average rating
-        ->limit(3) // Limit to 3 results
+    $topRecipes = Recipe::with(['ratings', 'region', 'dishType'])
+        ->when(Schema::hasColumn('recipes', 'status'), fn($query) => $query->where('status', 'published'))
+        ->select('recipes.*')
+        ->withAvg('ratings', 'score')
+        ->orderByDesc('ratings_avg_score')
+        ->limit(3)
         ->get();
-    // dd($topRecipes);
-
-    $totalRecipes = Recipe::count();
-
-    $totalUsers = User::count();
 
     return view('welcome', [
         'recipe' => $topRecipes,
-        'totalUsers' => $totalUsers,
-        'totalRecipes' => $totalRecipes
+        'totalUsers' => User::count(),
+        'totalRecipes' => Recipe::count(),
     ]);
-})->middleware(['guest']);
+});
+// ->middleware(['guest']);
 
 Route::get('/dashboard', function (Request $request) {
-    dd(1);
-    $searchTerm = $request->search;
+    $selectedAvailableIngredients = collect($request->input('available_ingredients', []))
+        ->filter()
+        ->map(fn($id) => (int) $id)
+        ->values()
+        ->all();
 
-    if ($searchTerm) {
-        $recipe = Recipe::whereHas('user', function ($query) use ($searchTerm) {
-            $query->where('name', 'like', '%' . $searchTerm . '%');
-        })->orWhere('category', 'like', '%' . $searchTerm . '%')
-            ->orWhere('title', 'like', '%' . $searchTerm . '%')
-            ->paginate(3);
-    } else {
-        // number of items per page
-        $recipe = Recipe::paginate(3);
-    }
+    $recipe = Recipe::with(['user', 'region', 'dishType', 'ingredientsList'])
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $searchTerm = trim($request->search);
+            $query->where(function ($subQuery) use ($searchTerm) {
+                $subQuery->where('title', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('summary', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('category', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('user', fn($userQuery) => $userQuery->where('name', 'like', '%' . $searchTerm . '%'))
+                    ->orWhereHas('region', fn($regionQuery) => $regionQuery->where('name', 'like', '%' . $searchTerm . '%'))
+                    ->orWhereHas('dishType', fn($dishTypeQuery) => $dishTypeQuery->where('name', 'like', '%' . $searchTerm . '%'))
+                    ->orWhereHas('ingredientsList', fn($ingredientQuery) => $ingredientQuery->where('name', 'like', '%' . $searchTerm . '%'));
+            });
+        })
+        ->when($request->filled('region'), fn($query) => $query->where('region_id', $request->integer('region')))
+        ->when($request->filled('dish_type'), fn($query) => $query->where('dish_type_id', $request->integer('dish_type')))
+        ->when($request->filled('ingredient'), fn($query) => $query->whereHas('ingredientsList', fn($ingredientQuery) => $ingredientQuery->where('ingredients.id', $request->integer('ingredient'))))
+        ->when(count($selectedAvailableIngredients) > 0, function ($query) use ($selectedAvailableIngredients) {
+            $query->whereHas('ingredientsList', fn($ingredientQuery) => $ingredientQuery->whereIn('ingredients.id', $selectedAvailableIngredients))
+                ->withCount(['ingredientsList as matched_ingredients_count' => fn($ingredientQuery) => $ingredientQuery->whereIn('ingredients.id', $selectedAvailableIngredients)])
+                ->orderByDesc('matched_ingredients_count');
+        })
+        ->when($request->filled('difficulty'), fn($query) => $query->where('difficulty', $request->difficulty))
+        ->when($request->filled('sort'), function ($query) use ($request) {
+            match ($request->sort) {
+                'rating' => $query->withAvg('ratings', 'score')->orderByDesc('ratings_avg_score'),
+                'popular' => $query->withCount('favorites')->orderByDesc('favorites_count'),
+                'time_asc' => $query->orderBy('cooking_time'),
+                default => $query->latest(),
+            };
+        }, fn($query) => $query->latest())
+        ->paginate(6)
+        ->withQueryString();
 
-    return view('dashboard', ['recipe' => $recipe]);
+    return view('dashboard', [
+        'recipe' => $recipe,
+        'regions' => Region::orderBy('name')->get(),
+        'dishTypes' => DishType::orderBy('name')->get(),
+        'ingredientsCatalog' => Ingredient::orderBy('name')->get(),
+        'difficultyOptions' => ['Dễ', 'Trung bình', 'Khó'],
+        'selectedAvailableIngredients' => $selectedAvailableIngredients,
+    ]);
 })->middleware(['auth', 'verified', 'role:user'])->name('dashboard');
 
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -53,9 +87,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     Route::resource('recipe', RecipeController::class);
     Route::resource('favorite', FavoriteController::class);
+    Route::get('comment', [CommentController::class, 'index'])->name('comment.index');
 
     Route::post('recipe/rating', [RecipeController::class, 'saveRating'])->name('recipe.rating');
-
     Route::post('recipe/comment', [RecipeController::class, 'sendComment'])->name('recipe.comment');
 });
 

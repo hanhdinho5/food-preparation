@@ -1,71 +1,45 @@
-@if($recipe->isNotEmpty())
-    @foreach ($recipe as $data)
-        <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0 mb-4">
-            <a href="{{ route('recipe.show', $data->id) }}"
-                class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl rounded-2xl bg-clip-border">
-                <img class="w-full h-[180px] rounded-t-2xl" src="{{ asset('storage/'.$data->image_path) }}"
-                    alt="cover recipe">
+@if ($recipe->isNotEmpty())
+    <div class="flex flex-wrap -mx-2">
+        @foreach ($recipe as $data)
+            <div class="w-1/2 px-2 mb-4">
+                <a href="{{ route('recipe.show', $data->id) }}"
+                    class="block bg-white rounded-xl shadow-md overflow-hidden hover:-translate-y-1 transition duration-200">
 
-                <div class="flex-auto p-6 pt-0">
+                    <!-- Image -->
+                    <img class="w-full h-[160px] object-cover" src="{{ asset('storage/' . $data->image_path) }}"
+                        alt="recipe">
 
-                    <div class="mt-6 text-center">
+                    <!-- Content -->
+                    <div class="p-4 text-center">
+                        <!-- Category -->
+                        <span
+                            class="inline-block mb-2 px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">
+                            {{ $data->category }}
+                        </span>
 
-                        <div class="mb-2 font-semibold leading-relaxed text-xs text-slate-700">
-                            @php
-                                $gradientClass = '';
+                        <!-- Title -->
+                        <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">
+                            {{ $data->title }}
+                        </h3>
 
-                                switch ($data->category) {
-                                    case 'breakfast':
-                                        $gradientClass = 'from-emerald-600 to-teal-300';
-                                        break;
-                                    case 'lunch':
-                                        $gradientClass = 'from-orange-600 to-orange-300';
-                                        break;
-                                    default:
-                                        $gradientClass = 'from-gray-600 to-gray-300'; // Default case if needed
-                                        break;
-                                }
-                            @endphp
-
-                            <span class="bg-gradient-to-tl {{ $gradientClass }} px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
-                                {{ $data->category }}
+                        <!-- Info -->
+                        <div class="flex justify-center gap-3 text-xs text-gray-500 mt-2">
+                            <span><i class="fa fa-clock-o"></i> {{ $data->cooking_time }}p</span>
+                            <span><i class="fa fa-star text-yellow-500"></i>
+                                {{ number_format($data->ratings()->avg('score') ?? 0, 1) }}
                             </span>
                         </div>
-
-                        <div class="mt-6 mb-2 font-semibold leading-relaxed text-base text-slate-700">
-                            {{ $data->title }}
-                        </div>
                     </div>
-                </div>
-
-                <div class="border-black/12.5 rounded-t-2xl p-6 text-center pt-0 pb-6 lg:pt-2 lg:pb-4">
-                    <div class="flex justify-between">
-                        <span class="text-slate-700 text-sm">
-                            <i class="fa fa-clock-o"></i>
-                            {{ $data->cooking_time }} Min
-                        </span>
-
-                        <span class="text-yellow-700 text-sm">
-                            <i class="fa fa-star"></i>
-                            {{ number_format($data->ratings()->avg('score') ?? 0, 1) }}
-                        </span>
-
-                        <span class="text-gray-500 text-sm">
-                            <i class="fa fa-comment"></i>
-                            {{ $data->comments()->count() ?? 0 }}
-                        </span>
-                    </div>
-                </div>
-            </a>
-        </div>
-    @endforeach
+                </a>
+            </div>
+        @endforeach
+    </div>
 @else
-    <span class="text-gray-500 text-xs">No recipes found.</span>
+    <span class="text-gray-500 text-sm">Không tìm thấy công thức nào.</span>
 @endif
-                                            
-<!-- Pagination Links -->
-@if(request()->routeIs('dashboard'))
-    <div class="mt-4 block">
-        {{ $recipe->links() }} <!-- Use the default Laravel pagination view -->
+
+@if (request()->routeIs('dashboard'))
+    <div class="mt-4">
+        {{ $recipe->links() }}
     </div>
 @endif

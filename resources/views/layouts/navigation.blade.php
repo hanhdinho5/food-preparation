@@ -25,26 +25,26 @@
                 <li>
                     <a class="flex items-center px-4 py-2 mr-2 font-normal transition-all ease-in-out lg-max:opacity-0 duration-250 text-sm text-slate-700 lg:px-2"
                         aria-current="page" href="#about_us">
-                        About Us
+                        Về chúng tôi
                     </a>
                 </li>
                 <li>
                     <a class="block px-4 py-2 mr-2 font-normal transition-all ease-in-out lg-max:opacity-0 duration-250 text-sm text-slate-700 lg:px-2"
                         href="#recipe">
-                        Recipes
+                        Công thức
                     </a>
                 </li>
                 <li>
                     <a class="block px-4 py-2 mr-2 font-normal transition-all ease-in-out lg-max:opacity-0 duration-250 text-sm text-slate-700 lg:px-2"
                         href="#how_to_join">
-                        How to Join?
+                        Tham gia thế nào?
                     </a>
                 </li>
             </ul>
             <ul class="hidden pl-0 mb-0 list-none lg:block lg:flex-row">
                 <li>
                     <a href="{{ route('login') }}" class="inline-block px-8 py-2 mb-0 mr-1 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer hover:-translate-y-px hover:shadow-xs active:opacity-85 text-xs tracking-tight-rem">
-                        Login
+                        Đăng nhập
                     </a>
                 </li>
               </ul>
