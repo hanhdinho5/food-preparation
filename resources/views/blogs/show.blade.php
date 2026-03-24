@@ -32,7 +32,7 @@
 
         </div>
     </aside>
-    <div class="relative w-full mx-auto px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+    <div class="relative w-full mx-auto px-4 pb-16 pt-5 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-6xl">
             <a href="{{ route('blogs.index') }}"
                 class="mb-6 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5">
