@@ -52,6 +52,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Rating::class, 'from_user');
     }
 
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'from_user');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->role == 'admin';

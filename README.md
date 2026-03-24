@@ -1,4 +1,3 @@
-
 # Recipe Sharing System
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
@@ -33,7 +32,3 @@ The Recipe Sharing System is a web application built with Laravel and Blade temp
 - [Filament](https://filamentphp.com/) - Admin panel package for Laravel
 - [MySQL](https://www.mysql.com/) - Database management system
 - [Tailwind](https://getbootstrap.com/) - CSS framework for responsive design
-<<<<<<< HEAD
-
-=======
->>>>>>> 43e5f1d (update overview, ratings...)

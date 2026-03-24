@@ -176,8 +176,8 @@
                                         <div class="mt-1 flex items-center gap-1">
                                             @for ($i = 1; $i <= 5; $i++)
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                    fill="currentColor"
-                                                    class="h-5 w-5" style="color: {{ ($ratingValue ?? 0) >= $i - 0.5 ? '#facc15' : '#d1d5db' }};">
+                                                    fill="currentColor" class="h-5 w-5"
+                                                    style="color: {{ ($ratingValue ?? 0) >= $i - 0.5 ? '#facc15' : '#d1d5db' }};">
                                                     <path fill-rule="evenodd"
                                                         d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.258 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.22 21.18c-.996.608-2.231-.29-1.96-1.425l1.258-5.273L2.4 10.955c-.887-.76-.415-2.212.75-2.305l5.403-.434 2.235-5.006Z"
                                                         clip-rule="evenodd" />
@@ -209,7 +209,8 @@
                                                 aria-label="Đánh giá {{ $i }} sao">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                     fill="currentColor" data-rating-star="{{ $i }}"
-                                                    class="h-6 w-6" style="color: {{ (int) ($myRatingValue ?? 0) >= $i ? '#facc15' : '#d1d5db' }};">
+                                                    class="h-6 w-6"
+                                                    style="color: {{ (int) ($myRatingValue ?? 0) >= $i ? '#facc15' : '#d1d5db' }};">
                                                     <path fill-rule="evenodd"
                                                         d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.258 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.22 21.18c-.996.608-2.231-.29-1.96-1.425l1.258-5.273L2.4 10.955c-.887-.76-.415-2.212.75-2.305l5.403-.434 2.235-5.006Z"
                                                         clip-rule="evenodd" />

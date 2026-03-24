@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
+use App\Models\Blog;
 use App\Models\DishType;
 use App\Models\Ingredient;
 use App\Models\Recipe;
@@ -19,16 +21,20 @@ Route::get('/', function () {
         ->select('recipes.*')
         ->withAvg('ratings', 'score')
         ->orderByDesc('ratings_avg_score')
-        ->limit(3)
+        ->limit(4)
         ->get();
 
     return view('welcome', [
         'recipe' => $topRecipes,
         'totalUsers' => User::count(),
         'totalRecipes' => Recipe::count(),
+        'totalBlogs' => Schema::hasTable('blogs') ? Blog::published()->count() : 0,
     ]);
-});
-// ->middleware(['guest']);
+})
+    ->middleware(['guest']);
+
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{blog:slug}', [BlogController::class, 'show'])->name('blogs.show');
 
 Route::get('/dashboard', function (Request $request) {
     $selectedAvailableIngredients = collect($request->input('available_ingredients', []))
@@ -78,9 +84,9 @@ Route::get('/dashboard', function (Request $request) {
         'difficultyOptions' => ['Dễ', 'Trung bình', 'Khó'],
         'selectedAvailableIngredients' => $selectedAvailableIngredients,
     ]);
-})->middleware(['auth', 'verified', 'role:user'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -88,6 +94,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::resource('recipe', RecipeController::class);
     Route::resource('favorite', FavoriteController::class);
     Route::get('comment', [CommentController::class, 'index'])->name('comment.index');
+
+    Route::get('my-blogs', [BlogController::class, 'myIndex'])->name('my-blogs.index');
+    Route::get('my-blogs/create', [BlogController::class, 'create'])->name('my-blogs.create');
+    Route::post('my-blogs', [BlogController::class, 'store'])->name('my-blogs.store');
+    Route::delete('my-blogs/{blog}', [BlogController::class, 'destroy'])->name('my-blogs.destroy');
 
     Route::post('recipe/rating', [RecipeController::class, 'saveRating'])->name('recipe.rating');
     Route::post('recipe/comment', [RecipeController::class, 'sendComment'])->name('recipe.comment');
