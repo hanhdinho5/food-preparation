@@ -239,7 +239,7 @@
                 <section class="bg-white py-8 mt-4 antialiased border-0 shadow-xl rounded-2xl bg-clip-border">
                     <div class="max-w-2xl mx-auto px-4">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-md font-bold text-slate-700">10 bình luận mới nhất</h2>
+                            <h2 class="text-md font-bold text-slate-700">Bình luận</h2>
                             <span class="text-xs text-slate-400">Thuộc công thức này</span>
                         </div>
                         <div class="mb-6">

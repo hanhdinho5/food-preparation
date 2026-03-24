@@ -1,26 +1,37 @@
 ﻿<x-app-layout>
-    @guest
-        <aside
-            class="fixed inset-y-0 flex-wrap items-center content-center justify-between block w-full mt-36 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0"
-            aria-expanded="false">
+    <aside
+        class="fixed inset-y-0 flex-wrap items-center content-center justify-between block w-full mt-36 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0"
+        aria-expanded="false">
 
-            <div class="items-center justify-center flex flex-col w-full max-h-screen overflow-auto grow basis-full">
-                <img src="{{ asset('./assets/img/masakan.jpg') }}" class="w-48 h-48 object-cover rounded-lg mb-4"
-                    alt="hinh_chinh" />
+        <div class="items-center justify-center flex flex-col w-full max-h-screen overflow-auto grow basis-full">
+            <img src="{{ asset('/storage/images/banner.jpg') }}" class="w-48 h-48 object-cover rounded-lg mb-4"
+                alt="hinh_chinh" />
 
+            @auth
+                <h2 class="text-center text-xl font-semibold mb-2">Khám phá công thức <br> Trọn vị yêu thương</h2>
+            @else
                 <h2 class="text-center text-xl font-semibold mb-2">Tham gia cộng đồng của chúng tôi!</h2>
+            @endauth
 
-                <p class="text-gray-700 mb-4 text-sm text-center p-4">
-                    Chia sẻ công thức nấu ăn yêu thích của bạn và kết nối với những người đam mê ẩm thực.
-                </p>
 
+            <p class="text-gray-700 mb-4 text-sm text-center p-4">
+                Chia sẻ công thức nấu ăn yêu thích của bạn và kết nối với những người đam mê ẩm thực.
+            </p>
+
+            @auth
+                <a href="{{ route('recipe.index') }}"
+                    class="inline-block px-8 py-2 mb-0 mr-1 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer hover:-translate-y-px hover:shadow-xs active:opacity-85 text-xs tracking-tight-rem">
+                    Công thức của tôi
+                </a>
+            @else
                 <a href="{{ route('register') }}"
                     class="inline-block px-8 py-2 mb-0 mr-1 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer hover:-translate-y-px hover:shadow-xs active:opacity-85 text-xs tracking-tight-rem">
                     Đăng ký
                 </a>
-            </div>
-        </aside>
-    @endguest
+            @endauth
+
+        </div>
+    </aside>
     <div class="relative w-full mx-auto px-4 pb-16 pt-32 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-6xl">
             <a href="{{ route('blogs.index') }}"

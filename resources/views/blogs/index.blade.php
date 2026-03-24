@@ -39,11 +39,10 @@
                 <div class="grid gap-8 lg:grid-cols-12 lg:items-stretch">
 
                     <div class="lg:col-span-9 flex flex-col justify-between gap-8">
-                        <div class="px-4">
-                            <span
-                                class="inline-flex rounded-full bg-orange-100 py-1 text-xs font-bold uppercase tracking-[0.24em] text-orange-600">
-                                Chuyên mục bài viết
-                            </span>
+                        <div class="px-4 pt-6">
+                            <h1 class="text-2xl font-bold text-gray-800">
+                                CHUYÊN MỤC BÀI VIẾT
+                            </h1>
                             <h1 class="mt-4 text-4xl font-bold text-slate-800 sm:text-5xl">
                                 Góc chia sẻ về món ăn, nguyên liệu và câu chuyện bếp núc
                             </h1>
