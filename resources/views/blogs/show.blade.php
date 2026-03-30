@@ -101,7 +101,7 @@
                             <h2 class="mt-3 text-2xl font-bold">Tìm thêm công thức phù hợp cho bữa ăn hôm nay</h2>
                             <p class="mt-3 text-sm leading-6 text-orange-50">Sau khi đọc bài viết, bạn có thể quay lại
                                 kho công thức để áp dụng ngay vào thực đơn của mình.</p>
-                            <a href="{{ url('/#recipe') }}"
+                            <a href="{{ url('/dashboard') }}"
                                 class="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-orange-600">
                                 Xem công thức
                             </a>

@@ -58,8 +58,8 @@ class UserResource extends Resource
                 ->maxLength(255)
                 ->hidden(! ($isCreate || $isEdit))
                 ->required($isCreate)
-                ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
-                ->dehydrated(fn (?string $state): bool => filled($state))
+                ->dehydrateStateUsing(fn(?string $state): ?string => filled($state) ? Hash::make($state) : null)
+                ->dehydrated(fn(?string $state): bool => filled($state))
                 ->helperText($isEdit ? 'Để trống nếu bạn muốn giữ nguyên mật khẩu hiện tại.' : null),
             Forms\Components\Select::make('role')
                 ->label('Vai trò')
@@ -76,7 +76,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('recipes'))
+            ->modifyQueryUsing(fn(Builder $query) => $query->withCount('recipes'))
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar')
                     ->label('Ảnh đại diện')
@@ -98,8 +98,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->label('Vai trò')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => $state === 'admin' ? 'Quản trị viên' : 'Người dùng')
-                    ->color(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => $state === 'admin' ? 'Quản trị viên' : 'Người dùng')
+                    ->color(fn(string $state): string => match ($state) {
                         'admin' => 'warning',
                         default => 'gray',
                     })
@@ -146,10 +146,10 @@ class UserResource extends Resource
                     Infolists\Components\TextEntry::make('role')
                         ->label('Vai trò')
                         ->badge()
-                        ->formatStateUsing(fn (string $state): string => $state === 'admin' ? 'Quản trị viên' : 'Người dùng'),
+                        ->formatStateUsing(fn(string $state): string => $state === 'admin' ? 'Quản trị viên' : 'Người dùng'),
                     Infolists\Components\TextEntry::make('recipes_count')
                         ->label('Tổng công thức')
-                        ->state(fn (User $record): int => $record->recipes()->count()),
+                        ->state(fn(User $record): int => $record->recipes_count ?? $record->recipes()->count()),
                     Infolists\Components\TextEntry::make('email_verified_at')
                         ->label('Xác thực email')
                         ->dateTime('d/m/Y H:i')

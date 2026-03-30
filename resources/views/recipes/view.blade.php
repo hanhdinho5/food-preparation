@@ -147,7 +147,7 @@
                             <div class="flex justify-between">
                                 <p class="leading-normal text-sm opacity-80">Ngày đăng</p>
                                 <p class="font-semibold text-sm">
-                                    {{ \Carbon\Carbon::parse($recipe->created_at)->format('d M Y H:i') }}</p>
+                                    {{ $recipe->created_at->format('d/m/Y H:i') }}</p>
                             </div>
                             <div class="flex justify-between">
                                 <p class="leading-normal text-sm opacity-80">Sơ chế</p>
@@ -261,7 +261,8 @@
                                     class=" mb-2 flex items-start justify-between gap-4 rounded-xl border border-gray-100 px-4 py-3">
                                     <div class="min-w-0 flex-1">
                                         <div class="flex items-center gap-2 text-sm">
-                                            <img src="{{ asset('assets/img/logo.png') }}" alt="avatar tác giả"
+                                            <img src="{{ $c->user->avatar ? asset('storage/' . $c->user->avatar) : asset('assets/img/logo.png') }}"
+                                                alt="avatar tác giả"
                                                 class="h-9 w-9 rounded-full object-cover border border-gray-200 shrink-0">
                                             <span class="font-semibold text-slate-700">{{ $c->user->name }}</span>
                                             <span

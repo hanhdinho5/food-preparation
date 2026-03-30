@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecipeResource\Pages;
-use App\Filament\Resources\RecipeResource\RelationManagers\CommentsRelationManager;
 use App\Models\DishType;
 use App\Models\Recipe;
 use App\Models\Region;
@@ -129,9 +128,7 @@ class RecipeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            CommentsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array

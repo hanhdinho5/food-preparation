@@ -119,41 +119,45 @@
                 <div
                     class="flex justify-center items-center gap-x-5 gap-y-8 lg:gap-y-0 flex-wrap md:flex-wrap lg:flex-nowrap lg:flex-row lg:gap-x-8">
                     <div class="relative w-full text-center max-md:max-w-sm max-md:mx-auto group md:w-2/5 lg:w-1/4">
-                        <div
-                            class="bg-indigo-50 rounded-lg flex justify-center items-center mb-5 w-20 h-20 mx-auto cursor-pointer transition-all duration-500 group-hover:bg-indigo-600">
+                        <a href="{{ route('register') }}">
+                            <div
+                                class="bg-indigo-50 rounded-lg flex justify-center items-center mb-5 w-20 h-20 mx-auto cursor-pointer transition-all duration-500 group-hover:bg-indigo-600">
 
-                            <svg class="stroke-indigo-600 transition-all duration-500 group-hover:stroke-white"
-                                width="60" height="60" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
+                                <svg class="stroke-indigo-600 transition-all duration-500 group-hover:stroke-white"
+                                    width="60" height="60" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
 
-                        </div>
-                        <h4 class="text-lg font-medium text-gray-900 mb-3 capitalize">
-                            Đăng ký
-                        </h4>
+                            </div>
+                            <h4 class="text-lg font-medium text-gray-900 mb-3 capitalize">
+                                Đăng ký
+                            </h4>
+                        </a>
                         <p class="text-sm font-normal text-gray-500">
                             Tạo tài khoản miễn phí bằng cách điền thông tin vào form đăng ký.
                         </p>
                     </div>
                     <div class="relative w-full text-center max-md:max-w-sm max-md:mx-auto group md:w-2/5 lg:w-1/4">
-                        <div
-                            class="bg-pink-50 rounded-lg flex justify-center items-center mb-5 w-20 h-20 mx-auto cursor-pointer transition-all duration-500 group-hover:bg-pink-600">
+                        <a href="{{ route('recipe.index') }}">
+                            <div
+                                class="bg-pink-50 rounded-lg flex justify-center items-center mb-5 w-20 h-20 mx-auto cursor-pointer transition-all duration-500 group-hover:bg-pink-600">
 
-                            <svg class="stroke-pink-600 transition-all duration-500 group-hover:stroke-white"
-                                width="60" height="60" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                            </svg>
+                                <svg class="stroke-pink-600 transition-all duration-500 group-hover:stroke-white"
+                                    width="60" height="60" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                                </svg>
 
-                        </div>
-                        <h4 class="text-lg font-medium text-gray-900 mb-3 capitalize">
-                            Chia sẻ công thức
-                        </h4>
+                            </div>
+                            <h4 class="text-lg font-medium text-gray-900 mb-3 capitalize">
+                                Chia sẻ công thức
+                            </h4>
+                        </a>
                         <p class="text-sm font-normal text-gray-500">
-                            Bắt đầu đăng các công thức yêu thích của bạn và kết nối với những người cùng đam mê ẩm thực!
+                            Bắt đầu đăng các công thức yêu thích và kết nối với những người cùng đam mê ẩm thực!
                         </p>
                     </div>
 

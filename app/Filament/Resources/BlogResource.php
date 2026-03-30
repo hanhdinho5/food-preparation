@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Notifications\Notification;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -31,7 +32,7 @@ class BlogResource extends Resource
                         ->required()
                         ->maxLength(255)
                         ->live(onBlur: true)
-                        ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
+                        ->afterStateUpdated(fn($state, Forms\Set $set) => $set('slug', Str::slug($state))),
                     Forms\Components\TextInput::make('slug')
                         ->label('Slug')
                         ->required()
@@ -111,8 +112,8 @@ class BlogResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Trạng thái')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => $state === 'published' ? 'Đã xuất bản' : 'Chưa xuất bản')
-                    ->color(fn (string $state): string => $state === 'published' ? 'success' : 'gray'),
+                    ->formatStateUsing(fn(string $state): string => $state === 'published' ? 'Đã xuất bản' : 'Chưa xuất bản')
+                    ->color(fn(string $state): string => $state === 'published' ? 'success' : 'gray'),
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('Xuất bản')
                     ->since()
@@ -135,6 +136,23 @@ class BlogResource extends Resource
                     ->options(User::query()->pluck('name', 'id')),
             ])
             ->actions([
+                Tables\Actions\Action::make('publish')
+                    ->label('Duyệt')
+                    ->icon('heroicon-m-check-badge')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->hidden(fn(Blog $record): bool => $record->status === 'published')
+                    ->action(function (Blog $record) {
+                        $record->update([
+                            'status' => 'published',
+                            'published_at' => $record->published_at ?? now(),
+                        ]);
+
+                        Notification::make()
+                            ->title('Bài viết đã được xuất bản thành công!')
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

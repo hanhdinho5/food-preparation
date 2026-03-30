@@ -13,16 +13,16 @@ class StateOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Users', $this->getTotalUsers())
-                ->description('Total users joined the system')
+            Stat::make('Tổng người dùng', $this->getTotalUsers())
+                ->description('Tổng số người dùng đã tham gia hệ thống')
                 ->descriptionIcon('heroicon-m-user')
                 ->color('success'),
-            Stat::make('Total Recipes', $this->getTotalRecipes())
-                ->description('Total recipes created here')
+            Stat::make('Tổng công thức', $this->getTotalRecipes())
+                ->description('Tổng số công thức đã được tạo')
                 ->descriptionIcon('heroicon-m-book-open')
                 ->color('info'),
-            Stat::make('Popular Category', $this->getPopularCategory())
-                ->description('The most popular categories created by user')
+            Stat::make('Danh mục phổ biến', $this->getPopularCategory())
+                ->description('Danh mục được người dùng tạo nhiều nhất')
                 ->descriptionIcon('heroicon-m-tag')
                 ->color('warning'),
         ];
@@ -41,9 +41,9 @@ class StateOverview extends BaseWidget
     public function getPopularCategory(): string
     {
         return Recipe::select('category', DB::raw('COUNT(*) as total_recipes'))
-                ->groupBy('category')
-                ->orderBy('total_recipes', 'desc') // Change to 'asc' for ascending order
-                ->first()
-                ->category;
+            ->groupBy('category')
+            ->orderBy('total_recipes', 'desc') // Change to 'asc' for ascending order
+            ->first()
+            ->category;
     }
 }
